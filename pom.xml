@@ -1,0 +1,117 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.apache.sqoop.connector</groupId>
+	<artifactId>sqoop-connector-td</artifactId>
+	<version>0.7-SNAPSHOT</version>
+
+	<!-- 
+	
+	mvn install:install-file -Dfile=teradata-connector-1.3.3.jar -DgroupId=com.teradata -DartifactId=connector -Dversion=1.3.3 -Dpackaging=jar
+	mvn install:install-file -Dfile=terajdbc4.jar -DgroupId=com.teradata -DartifactId=jdbc -Dversion=1.3.3 -Dpackaging=jar
+	
+	
+	 -->
+	 
+	<repositories>
+		<repository>
+			<id>mapr-releases</id>
+			<url>http://repository.mapr.com/maven/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
+	<dependencies>
+	
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-core</artifactId>
+			<version>1.0.3-mapr-3.1.1.28350</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.sqoop</groupId>
+			<artifactId>sqoop</artifactId>
+			<version>1.4.3-mapr</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>com.teradata</groupId>
+			<artifactId>jdbc</artifactId>
+			<version>1.3.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.teradata</groupId>
+			<artifactId>connector</artifactId>
+			<version>1.3.3</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<extensions>
+			<!-- Enabling the use of FTP -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
+		
+		
+		   <plugins>
+     <plugin>
+       <groupId>org.codehaus.mojo</groupId>
+       <artifactId>wagon-maven-plugin</artifactId>
+       <version>1.0-beta-3</version>
+       <configuration>
+		<serverId>ssh-repository</serverId>
+         <fromFile>${project.build.directory}/${project.build.finalName}.jar</fromFile>
+         <url>scpexe://172.16.39.130/opt/mapr/sqoop/sqoop-1.4.4/lib</url>
+       </configuration>
+       <executions>
+         <execution>
+           <id>upload-war-to-server</id>
+           <phase>package</phase>
+           <goals>
+             <goal>upload-single</goal>
+           </goals>
+         </execution>
+       </executions>
+     </plugin>
+     <plugin>
+       <groupId>org.codehaus.mojo</groupId>
+       <artifactId>wagon-maven-plugin</artifactId>
+       <version>1.0-beta-3</version>
+       <configuration>
+		<serverId>ssh-repository</serverId>
+         <fromFile>${project.build.directory}/${project.build.finalName}.jar</fromFile>
+         <url>scpexe://172.16.39.128/opt/mapr/sqoop/sqoop-1.4.4/lib</url>
+       </configuration>
+       <executions>
+         <execution>
+           <id>upload-war-to-server2</id>
+           <phase>package</phase>
+           <goals>
+             <goal>upload-single</goal>
+           </goals>
+         </execution>
+       </executions>
+     </plugin>
+   </plugins>
+		
+	</build>
+
+</project>
