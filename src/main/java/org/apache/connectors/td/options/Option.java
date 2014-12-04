@@ -20,15 +20,50 @@ package org.apache.connectors.td.options;
 
 import org.apache.hadoop.conf.Configuration;
 
+/**
+ * The Interface Option.
+ * 
+ * Currently this specifically means a command line switch, in the future, this
+ * should refer to a "tdch." configuration parameter of the Job Context. Either
+ * way, this interface, should not change.
+ * 
+ */
 public interface Option {
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName();
 	
+	/**
+	 * Gets the value.
+	 *
+	 * @return the value
+	 */
 	public String getValue();
 
+	/**
+	 * Sets the value.
+	 *
+	 * @param value the new value
+	 * @throws ParameterValidationException the parameter validation exception
+	 */
 	public void setValue(String value) throws ParameterValidationException;
 
+	/**
+	 * Configure.
+	 *
+	 * @param confObj the conf obj
+	 * @throws SetupException the setup exception
+	 */
 	public void configure(Configuration confObj) throws SetupException;
 	
+	/**
+	 * Checks for value.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean hasValue();
 }
