@@ -83,4 +83,10 @@ public class TeradataExportOptions extends Options {
 		return  vals;
 	}
 
+	@Override
+	public void mapOptions() throws ParameterValidationException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

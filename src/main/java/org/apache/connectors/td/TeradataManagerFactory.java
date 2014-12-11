@@ -31,7 +31,7 @@ public class TeradataManagerFactory extends DefaultManagerFactory {
 	public ConnManager accept(JobData data) {
 	    SqoopOptions options = data.getSqoopOptions();
 	    String scheme = extractScheme(options);
-
+	    	    
 	    if (scheme.startsWith("jdbc:teradata")) {
 	      return new TeradataManager(options);
 	    }

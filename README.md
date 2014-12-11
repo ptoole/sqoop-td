@@ -38,5 +38,24 @@ one of the nodes as the root user.
 Usage
 -----
 
+	sqoop import \
+		--connect jdbc:teradata://172.16.39.129/dbc \
+		--connection-manager org.apache.connectors.td.TeradataManager \
+		--username dbc --password dbc --table Dbase \
+		-D tdch.targetpaths=/user/root/dbas2
 
-# Mappings 
+	sqoop import \
+		-D tdch.targettableschema="a,b,c,d" \
+		--connect jdbc:teradata://172.16.39.129/tdwm \
+		--connection-manager org.apache.connectors.td.TeradataManager \
+		--username dbc --password dbc --table events --hive-import
+
+
+
+	sqoop export \
+		-D tdch.targettableschema="a,b,c,d" \
+		--connect jdbc:teradata://172.16.39.129/tdwm \
+		--connection-manager org.apache.connectors.td.TeradataManager \
+		--username dbc --password dbc --table events --hive-import
+
+

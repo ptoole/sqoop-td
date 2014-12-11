@@ -19,6 +19,7 @@
 package org.apache.connectors.td;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -136,6 +137,7 @@ public class TeradataManager extends CatalogQueryManager {
 	public void exportTable(ExportJobContext context) throws IOException,
 			ExportException {
 		
+		context.setConnManager(this);
 		Configuration conf = context.getOptions().getConf();
 		Iterator<Map.Entry<String,String>> i = conf.iterator();
 		
@@ -177,23 +179,20 @@ public class TeradataManager extends CatalogQueryManager {
 	@Override
 	public void importTable(ImportJobContext context) throws IOException,
 			ImportException {
-
+		
+		context.setConnManager(this);
 		Configuration conf = context.getOptions().getConf();
 		Iterator<Map.Entry<String,String>> i = conf.iterator();
 		
-		Options tdOpts = TeradataImportOptions.create();
+		Options tdOpts;
+		
+		tdOpts = TeradataImportOptions.create(context);
+		
+		
 		try {
-			tdOpts.set("classname", "com.teradata.jdbc.TeraDriver");
-			tdOpts.set("username", context.getOptions().getUsername());
-			tdOpts.set("password", context.getOptions().getPassword());
-			tdOpts.set("url", context.getOptions().getConnectString());
-			tdOpts.set("sourcetable", context.getOptions().getTableName());
-			tdOpts.set("targetpaths", context.getDestination().getName());
+
+			tdOpts.mapOptions();
 			
-			if (context.getOptions().doHiveImport() ) {
-				LOG.info("Hive target set.");
-				tdOpts.set("jobtype", "hive");
-			}
 			while (i.hasNext()) {
 				Map.Entry<String,String> val = i.next();
 				LOG.debug(val.getKey() + " = " + val.getValue());
@@ -202,13 +201,13 @@ public class TeradataManager extends CatalogQueryManager {
 						tdOpts.set(val.getKey().substring(TD_PREFIX.length()), val.getValue());
 				}
 			}
-		} catch (ParameterValidationException e) {
+		} catch (Exception e) {
 			throw new IOException(e);
 		}
 		
 		String[] parameters = tdOpts.build();
 		
-		LOG.debug("Parameters to TD: " + join(parameters," "));
+		LOG.info("Parameters to TD: " + join(parameters," "));
 		
 		ConnectorImportTool.main(parameters);		
 	}

@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public abstract class Options {
 
 	private Map<String, Option> options = new HashMap<String, Option>();
@@ -47,11 +48,12 @@ public abstract class Options {
 	}
 	
 	public abstract Collection<String> prepare(Option opt);
-	
+
+	public abstract void mapOptions() throws Exception;
+
 	public String[] build() {
 		ArrayList<String> vals = new ArrayList<String>();
 		for (Option opt : options.values()) {
-			System.out.println("Preparing " + opt.getName() + " " + opt.hasValue() + " " + opt.getValue());
 			if (opt.hasValue())
 				vals.addAll(prepare(opt));
 		}
